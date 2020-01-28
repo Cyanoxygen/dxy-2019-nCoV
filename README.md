@@ -14,7 +14,17 @@ for c in d.Areas:
     print(f"{c.name} 死亡 {c.dead} 人") # 输出各省的死亡数
 ```
 
-### 封装
+### 更改日志
+
+- 2020-01-27 v0.1 初始版本
+- 2020-01-29 v0.2 ：
+    - 新增总数统计
+    - `class Dxy` 的 `__str__()` 方法
+     
+### TODO
+`Rumours` 的 Implementation
+
+## 封装
 - `class dxy.Area` : 地区及其城市的数据 `list[dxy.Area]`
     - `.name` - 地区名
     - `.suspected` - 疑似病例数
@@ -74,4 +84,14 @@ for c in d.Areas:
 | 方法 | 描述 | 
 | --- |  --- |
 | `printout()` | 输出所有地区的数据 |
-| `printall()` | 输出所有地区及其城市的数据 |
+| `printall()` | 输出所有地区及其城市的数据 \
+
+`__str__()` 方法输出样例：
+```
+概况
+------
+疑似：       0 例
+确诊：    4633 例
+死亡：     106 例
+治愈：      73 例
+```

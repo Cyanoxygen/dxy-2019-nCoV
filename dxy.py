@@ -6,7 +6,7 @@ import json
 dxylink = 'https://3g.dxy.cn/newh5/view/pneumonia_peopleapp?from=timeline'
 format_string = " {0:20} | {1:^10} | {2:^10} | {3:^10} | {4:^10} "
 format_string_alt = "  | {0:17} | {1:^10} | {2:^10} | {3:^10} | {4:^10} "
-
+format_string_count = '概况\n------\n疑似：{0:>8} 例\n确诊：{1:>8} 例\n死亡：{2:>8} 例\n治愈：{3:>8} 例'
 
 class City:
     def __init__(self, source: dict):
@@ -66,6 +66,10 @@ class Dxy:
     def __init__(self):
         self.Areas: list = []
         self.News: list = []
+        self.totalConfirmed = 0
+        self.totalSuspected = 0
+        self.totalDead = 0
+        self.totalCured = 0
         try:
             respond = request.urlopen(dxylink).read().decode('utf-8')
         except request.HTTPError as e:
@@ -91,10 +95,18 @@ class Dxy:
         for news_in_list in news:
             self.News.append(News(news_in_list))
 
+        for area in self.Areas:
+            self.totalConfirmed += area.confirmed
+            self.totalCured += area.cured
+            self.totalDead += area.dead
+            self.totalSuspected += area.suspected
+
     def printout(self):
         print(format_string.format('省份 / 城市', '疑似', '确诊', '死亡', '治愈'))
         for area in self.Areas:
             print(format_string.format(area.name, area.suspected, area.confirmed, area.dead, area.cured))
+
+        print(format_string_count.format(self.totalSuspected, self.totalConfirmed, self.totalDead, self.totalCured))
 
     def printall(self):
         print(format_string.format('省份 / 城市', '疑似', '确诊', '死亡', '治愈'))
@@ -102,3 +114,11 @@ class Dxy:
             print(format_string.format(area.name, area.suspected, area.confirmed, area.dead, area.cured))
             for city in area.cities:
                 print(format_string_alt.format(city.name, city.suspected, city.confirmed, city.dead, city.cured))
+
+        print(format_string_count.format(self.totalSuspected, self.totalConfirmed, self.totalDead, self.totalCured))
+
+    def __str__(self):
+        return format_string_count.format(self.totalSuspected, self.totalConfirmed, self.totalDead, self.totalCured)
+
+    def __repr__(self):
+        return self.__str__()
